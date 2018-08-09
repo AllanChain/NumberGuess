@@ -16,15 +16,35 @@ def judge(c,u):
         if i in u:
             b+=1
     return a,b-a
-
+class family:
+    def __init__(p,c):
+        self.p=p
+        self.c=c
+        aelf.diff=p.difference(c)
+    def __eq__(self,x):
+        if isinstance(x,set):
+            return self.p==p
+        #elif isinstance(x,family
 def find_same(la,lb):
-    same=[]
+    same=set()
+    subs=[]
+    exclude=[]
     for i in la:
-        if i in lb:
-            same.append(i)
-    for i in same:
-        la.remove(i)
-        lb.remove(i)
+        for j in lb:
+            if i==j:
+                same.add(i)
+            elif j in i:
+                if j in subs:
+                    exclude.append(j)
+                    subs.remove(j)
+                subs.append(j)
+            elif i in j:
+                if i in subs:
+                    exclude.append(i)
+                    subs.remove(i)
+                subs.append(j)
+    la=la.difference(same)
+    lb=lb.difference(same)
     return same,la,lb
 def guess(num):
     a,b=judge(num)
