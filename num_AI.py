@@ -16,15 +16,16 @@ def judge(c,u):
         if i in u:
             b+=1
     return a,b-a
-class family:
-    def __init__(p,c):
-        self.p=p
-        self.c=c
-        aelf.diff=p.difference(c)
-    def __eq__(self,x):
-        if isinstance(x,set):
-            return self.p==p
-        #elif isinstance(x,family
+def contain(a,b):
+    '''To test of two tuples contains'''
+    a_set=set(a)
+    b_set=set(b)
+    if a_set in b_set:
+        return (a,b)
+    elif b_set in a_set:
+        return (b,a)
+    else:
+        return False
 def find_same(la,lb):
     same=set()
     subs=[]
