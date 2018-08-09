@@ -1,6 +1,7 @@
 import random
 from itertools import combinations
 
+
 RANGE=list('123456789')
 rest=SEQ=4
 posblties=set(tuple())
@@ -8,6 +9,7 @@ guess_in=set()
 guess_pos=[]
 history={}
 cnum=random.sample(RANGE,k=SEQ)
+
 def judge(c,u):
     a=b=0
     for i in range(SEQ):
@@ -17,6 +19,7 @@ def judge(c,u):
         if i in u:
             b+=1
     return a,b-a
+
 def contain(a,b):
     '''To test of two tuples contains'''
     a_set=set(a)
@@ -28,8 +31,7 @@ def contain(a,b):
     else:
         return None,None
 def merge(la,lb,subs):
-    #if not la:return lb
-    #if not lb:return la
+    '''merge two swt of possibility under conditionsh'''
     posblty=set()
     for i in la:
         for j in lb:
@@ -37,7 +39,9 @@ def merge(la,lb,subs):
             if not p in subs and len(p)<=rest:
                 posblty.add(p)
     return posblty
+
 def clear(l):
+    '''除去父集'''
     l=list(l)
     removes=set()
     for i in range(len(l)):
@@ -47,6 +51,7 @@ def clear(l):
                 removes.add(p)
     return set(l)-removes
 def history_clear(l):
+    '''根据历史排除'''
     for posblty in l.copy():
         for h,r in history.items():
             if len(set(posblty)&set(h))>r[1]:
@@ -71,8 +76,8 @@ def calc_posblty(la,lb):
     la=la-same-subs
     lb=lb-same-subs
     subs-=exclude
-    #print(same,subs,la,lb,merge(la,lb,subs))
     return clear(same|subs|merge(la,lb,subs))
+
 def guess(num):
     global posblties
     a,b=judge(cnum,num)
@@ -82,12 +87,12 @@ def guess(num):
     my_posblty=set(combinations(num,a+b))
     posblties=calc_posblty(my_posblty,posblties) if posblties else my_posblty
     posblties=history_clear(posblties)
-    print(posblties)
     list_posblyties=list(posblties)
     n=random.choice(list_posblyties)
     while len(n)<4:
         n=tuple(set(n)|set(random.choice(list_posblyties)))
     return n[:4]
+
 n=guess(list(str(1234)))
 n=guess(list(str(5678)))
 rest=history['1234'][1]+history['5678'][1]
