@@ -53,7 +53,6 @@ def clear(l):
     return set(l)-removes
 def history_clear(l):
     '''根据历史排除'''
-    #print(l)
     def filt(p):
         for i in guess_in:
             if not i in p:
@@ -63,13 +62,7 @@ def history_clear(l):
                 #全对才可
                 return False
         return True
-
     l=set(filter(filt,l))
-    '''for posblty in l.copy():
-        for h,r in history.items():
-            if len(set(posblty)&set(h))>r[1]:
-                print(l,posblty,h)
-                l.remove(posblty)'''
     return l
 def calc_posblty(la,lb):
     same=set()
@@ -132,10 +125,19 @@ def next_num():
             return n.pop()
 def analyze_order():
     for h,r in history:
+        ins=set()
+        exs=set()
+        pos=set()
+        situation=set()
         for n in guess_in:
-            if not n in h:break
-            h.index(r)
-
+            if not n in h:continue
+            situation[n]=h.index(n)
+        if len(situation)==r[0]:
+            ins|=situation
+        elif r[0]==0:
+            exs|=situation
+        else:
+            t_pos=set(combinations(situation,r[0]))
 
 pre=(tuple('1234'),tuple('5678'))
 ab=0
