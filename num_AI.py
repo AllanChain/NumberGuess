@@ -115,7 +115,8 @@ def guess(num):
     posblties=history_clear(posblties)
     if len(posblties)==1:
         print('only:',posblties)
-        guess(posblties.pop())
+        #guess(posblties.pop())
+        #事实证明唯一可能性很靠谱
         return False
     print(posblties,guess_in)
     return b+a
@@ -129,6 +130,12 @@ def next_num():
         n=history_clear({n[:4]})
         if  n!=set():
             return n.pop()
+def analyze_order():
+    for h,r in history:
+        for n in guess_in:
+            if not n in h:break
+            h.index(r)
+
 
 pre=(tuple('1234'),tuple('5678'))
 ab=0
@@ -150,10 +157,10 @@ if rest==3:
 print('rest: ',rest)
 print('flag: ',flag)
 if flag:
-    for i in range(10):
+    for i in range(8):
         n=next_num()
         ab=guess(n)
         print('*'*6,ab)
         if ab==False:
             break
-print(history,len(history))
+print(history,len(history),guess_in)
