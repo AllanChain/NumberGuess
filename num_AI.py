@@ -9,7 +9,7 @@ guess_in=set()
 guess_pos=[]
 history={}
 cnum=random.sample(RANGE,k=SEQ)
-#cnum=tuple('2649')
+#cnum=tuple('5679')
 
 def judge(c,u):
     a=b=0
@@ -107,10 +107,12 @@ def guess(num):
     posblties=calc_posblty(my_posblty,posblties) if posblties else my_posblty
     posblties=history_clear(posblties)
     if len(posblties)==1:
-        print('only:',posblties)
-        #guess(posblties.pop())
-        #事实证明唯一可能性很靠谱
-        return False
+        posblty=posblties.pop()
+        if len(posblties)==4:
+            print('only:',posblties)
+            #guess(posblties.pop())
+            #事实证明唯一可能很靠谱
+            return False
     print(posblties,guess_in)
     return b+a
 
@@ -124,27 +126,32 @@ def next_num():
         if  n!=set():
             return n.pop()
 def analyze_order():
-    for h,r in history:
+    for h,r in history.items():
         ins=set()
         exs=set()
         pos=set()
+        my_pos=set()
         situation=set()
         for n in guess_in:
             if not n in h:continue
-            situation[n]=h.index(n)
+            situation.add((n,h.index(n)))
         if len(situation)==r[0]:
             ins|=situation
         elif r[0]==0:
             exs|=situation
         else:
-            t_pos=set(combinations(situation,r[0]))
+            my_pos=set(combinations(situation,r[0]))
+        pos=pos-exs-ins
+        pos=calc_posblty(pos,my_pos) if pos else my_pos
+    print(ins,exs,pos)
 
 pre=(tuple('1234'),tuple('5678'))
 ab=0
 flag=True
 for p in pre:
     ab+=guess(p)
-    if ab==False:
+    print(ab)
+    if ab is False:
         flag=False
         break
 rest=ab
@@ -166,3 +173,4 @@ if flag:
         if ab==False:
             break
 print(history,len(history),guess_in)
+analyze_order()
