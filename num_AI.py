@@ -9,6 +9,7 @@ guess_in=set()
 guess_pos=[]
 history={}
 cnum=random.sample(RANGE,k=SEQ)
+#cnum=tuple('2649')
 
 def judge(c,u):
     a=b=0
@@ -52,10 +53,23 @@ def clear(l):
     return set(l)-removes
 def history_clear(l):
     '''根据历史排除'''
-    for posblty in l.copy():
+    #print(l)
+    def filt(p):
+        for i in guess_in:
+            if not i in p:
+                return False
+        for h,r in history.items():
+            if len(set(p)&set(h))!=r[1] or p==h:
+                #全对才可
+                return False
+        return True
+
+    l=set(filter(filt,l))
+    '''for posblty in l.copy():
         for h,r in history.items():
             if len(set(posblty)&set(h))>r[1]:
-                l.remove(posblty)
+                print(l,posblty,h)
+                l.remove(posblty)'''
     return l
 def calc_posblty(la,lb):
     same=set()
@@ -79,26 +93,67 @@ def calc_posblty(la,lb):
     return clear(same|subs|merge(la,lb,subs))
 
 def guess(num):
-    global posblties
+    global posblties,rest,guess_in
     a,b=judge(cnum,num)
     history[''.join(num)]=(a,b+a)
-    if a+b==rest:
+    print(''.join(num),b+a)
+    if a+b==4:
+        guess_in=num
+        posblties=history_clear(posblties)
+        print('here')
         return False
+    elif a+b==rest:
+        new_posblties=set()
+        for posblty in posblties:
+            new_posblties.add(posblty+('9',))
+        posblties=new_posblties
+        print(posblties)
+        rest+=1
+        return
     my_posblty=set(combinations(num,a+b))
     posblties=calc_posblty(my_posblty,posblties) if posblties else my_posblty
     posblties=history_clear(posblties)
-    list_posblyties=list(posblties)
-    n=random.choice(list_posblyties)
-    while len(n)<4:
-        n=tuple(set(n)|set(random.choice(list_posblyties)))
-    return n[:4]
+    if len(posblties)==1:
+        print('only:',posblties)
+        guess(posblties.pop())
+        return False
+    print(posblties,guess_in)
+    return b+a
 
-n=guess(list(str(1234)))
-n=guess(list(str(5678)))
-rest=history['1234'][1]+history['5678'][1]
-print(rest)
-for i in range(5):
-    n=guess(n)
-    if n==False:
+def next_num():
+    list_posblyties=list(posblties)
+    while True:
+        n=random.choice(list_posblyties)
+        while len(n)<4:
+            n=tuple(set(n)|set(random.choice(list_posblyties)))
+        n=history_clear({n[:4]})
+        if  n!=set():
+            return n.pop()
+
+pre=(tuple('1234'),tuple('5678'))
+ab=0
+flag=True
+for p in pre:
+    ab+=guess(p)
+    if ab==False:
+        flag=False
         break
-print(history)
+rest=ab
+if rest==3:
+    new_posblties=set()
+    for posblty in posblties:
+        new_posblties.add(posblty+('9',))
+    posblties=new_posblties
+    print(posblties)
+    guess_in.add('9')
+    rest+=1
+print('rest: ',rest)
+print('flag: ',flag)
+if flag:
+    for i in range(10):
+        n=next_num()
+        ab=guess(n)
+        print('*'*6,ab)
+        if ab==False:
+            break
+print(history,len(history))
