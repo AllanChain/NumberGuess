@@ -8,3 +8,5 @@ A number guessing game.
     - The number generated is 3957
     - You guessed 1367
     - Since both number 3 and 7 is in 3957, and 3 is not in the right place, the result given is 1A1B
+## AI
+As for the AI, currently I only completed algorithm to guess the numbers in the cnum. Order computing in progress.
